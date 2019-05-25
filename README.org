@@ -1,2 +1,22 @@
-# docker_tutorials
-docker, tutorials
+#+STARTUP: overview
+#+STARTUP: content
+#+STARTUP: showall
+#+STARTUP: showeverything
+
+#+hugo_base_dir: ~/sites/hillfolk/
+#+hugo_section: ./posts
+
+#+hugo_weight: 100
+#+hugo_auto_set_lastmod: t
+
+#+TITLE:Docker에 간단한 로그 서버 올리기 
+
+#+DATE: 2019-04-01
+#+author: Hillfolk
+
+#+hugo_tags: docker:go:echo:eurekalog
+#+hugo_categories: posts
+#+hugo_draft: true
+
+
+도커는 서버 개발에서 배포 및 빌드 테스트 및 운영에도 많은 영향을 미치고 있다. 이번에 간단한 에러 로그 서버를 만들면서 회사에서 쓰는 Synology Nas의 내장 docker 를 사용할수 있도록 프로그램 빌듯 및 도커의 환경 설정을 수행했다. 

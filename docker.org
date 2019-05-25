@@ -1,0 +1,84 @@
+#+STARTUP: overview
+#+STARTUP: content
+#+STARTUP: showall
+#+STARTUP: showeverything
+
+#+hugo_base_dir: ~/sites/hillfolk/
+#+hugo_section: ./posts
+
+#+hugo_weight: 100
+#+hugo_auto_set_lastmod: t
+
+#+TITLE:Docker에 간단한 로그 서버 올리기 
+
+#+DATE: 2019-04-01
+#+author: Hillfolk
+
+#+hugo_tags: docker:go:echo:eurekalog
+#+hugo_categories: posts
+#+hugo_draft: true
+
+
+도커는 서버 개발에서 배포 및 빌드 테스트 및 운영에도 많은 영향을 미치고 있다. 이번에 간단한 에러 로그 서버를 만들면서 회사에서 쓰는 Synology Nas의 내장 docker 를 사용할수 있도록 프로그램 빌듯 및 도커의 환경 설정을 수행했다. 
+
+* Dockerfile 만들기
+  도커를 사용하기위해서는 Dockerfile 을 프로젝트에 구성해줘야 한다. 
+  - 속성 종류
+    FROM 
+    ENV
+    RUM
+    WORKDIR
+   
+
+#+BEGIN_SRC
+
+FROM golang:1.11 as goimage
+ENV SRC=/go/src/
+ENV GO111MODULE=on
+RUN mkdir -p /go/src/
+WORKDIR /go/src/github.com/hillfolk/eurekalog-http-server
+RUN git clone -b master --single-branch https://github.com/hillfolk/eurekalog-http-server.git /go/src/github.com/hillfolk/eurekalog-http-server && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
+go build -o bin/eurekalog-http-server
+
+
+FROM alpine:3.9 as baseimagealp
+ENV WORK_DIR=/docker/bin
+WORKDIR $WORK_DIR
+RUN mkdir -p ./data/
+COPY --from=goimage /go/src/github.com/hillfolk/eurekalog-http-server/bin/ ./
+ENTRYPOINT /docker/bin/eurekalog-http-server server --port=8080
+EXPOSE 8080
+
+#+END_SRC
+
+** 속성 
+
+
+
+** image Build
+  -  build
+
+#+BEGIN_SRC
+
+    $ sudo docker build --tag [app_name]:[tag] .
+#+END_SRC
+
+
+** Docker Container
+  - Run
+  - Start
+  - Stop
+
+** Docker Hub 사용하기
+   Docker Hub에 image를 이미지 올리기 위해서는 이미지 명을 아래 규칙으로 작성해야 한다. 
+   [레파지토리]/[name]:[tag]
+  - Docker 허브에 push 
+    
+** synology nas 에서 운영해보기
+  Nas 파일 시스템을 사용하기 위한 설정 
+
+** [[https://github.com/hillfolk/eurekalog-http-server][eurekalog-http-server]]
+  
+
+
+# End:
